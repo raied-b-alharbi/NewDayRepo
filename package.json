@@ -7,15 +7,16 @@
     "start": "next start"
   },
   "dependencies": {
+    "@prisma/client": "^5.2.0",
+    "@vercel/analytics": "^1.6.1",
     "bcryptjs": "^2.4.3",
+    "exceljs": "^4.3.0",
     "jsonwebtoken": "^9.0.0",
     "next": "^13.5.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-query": "^3.39.3",
-    "tailwindcss": "^4.2.0",
-    "@prisma/client": "^5.2.0",
-    "exceljs": "^4.3.0"
+    "tailwindcss": "^4.2.0"
   },
   "devDependencies": {
     "prisma": "^5.2.0"
