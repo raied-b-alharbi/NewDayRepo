@@ -1,0 +1,43 @@
+name: Unzip and Upload Files
+
+on:
+  push:
+    paths:
+      - "*.zip" # تشغيل العمل عند رفع أي ملف ZIP
+  workflow_dispatch: # خيار يسمح لك بتشغيل العمل يدويًا
+
+jobs:
+  unzip-and-push:
+    runs-on: ubuntu-latest # نظام تشغيل بيئة التنفيذ
+
+    steps:
+      # الخطوة 1: تنزيل المستودع
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      # الخطوة 2: العثور على ملف ZIP وفك ضغطه
+      - name: Unzip File
+        run: |
+          # العثور على أول ملف ZIP
+          ZIP_FILE=$(find . -type f -name "*.zip" | head -n 1)
+          if [ -z "$ZIP_FILE" ]; then
+            echo "Error: No ZIP file found."
+            exit 1
+          fi
+          echo "Found ZIP file: $ZIP_FILE"
+          # فك ضغط الملف
+          unzip -o "$ZIP_FILE" -d ./extracted/
+          # حذف ملف ZIP لتجنب الإزعاج
+          rm "$ZIP_FILE"
+
+      # الخطوة 3: دفع الملفات المستخرجة إلى الفرع الرئيسي
+      - name: Commit and Push
+        run: |
+          git config --local user.name "GitHub Actions"
+          git config --local user.email "actions@github.com"
+          # نقل الملفات المفكوكة إلى الدليل الجذر
+          mv ./extracted/* .
+          rm -rf ./extracted/
+          git add .
+          git commit -m "Unzipped and uploaded files"
+          git push origin main
